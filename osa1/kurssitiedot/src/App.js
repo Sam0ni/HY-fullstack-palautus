@@ -7,11 +7,12 @@ const Header = (course) => {
 }
 
 const Content = (parts) => {
+  console.log(parts.parts[0].name)
   return (
     <div>
-      <Part name={parts.part1.name} exercises={parts.part1.exercises}/>
-      <Part name={parts.part2.name} exercises={parts.part2.exercises}/>
-      <Part name={parts.part3.name} exercises={parts.part3.exercises}/>
+      <Part name={parts.parts[0].name} exercises={parts.parts[0].exercises}/>
+      <Part name={parts.parts[1].name} exercises={parts.parts[1].exercises}/>
+      <Part name={parts.parts[2].name} exercises={parts.parts[2].exercises}/>
     </div>
   )
 }
@@ -20,7 +21,7 @@ const Total = (exercises) => {
   return(
     <div>
       <p>
-        Number of exercises {exercises.one + exercises.two + exercises.three}
+        Number of exercises {exercises.exercises[0].exercises + exercises.exercises[1].exercises + exercises.exercises[2].exercises}
       </p>
     </div>
   )
@@ -57,8 +58,8 @@ const App = () => {
   return (
     <div>
       <Header name={course}/>
-      <Content part1={parts[0]} part2={parts[1]} part3={parts[2]}/>
-      <Total one={parts[0].exercises} two={parts[1].exercises} three={parts[2].exercises}/>
+      <Content parts={parts}/>
+      <Total exercises={parts}/>
     </div>
   )
 }
