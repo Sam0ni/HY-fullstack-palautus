@@ -6,21 +6,29 @@ const Button = ({handleClick, text}) => (
   </button>
 )
 
-const StatisticLine = ({value, text}) => <p>{text} {value}</p> 
-
+const StatisticLine = ({value, text}) => {
+  return (
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
+  ) 
+}
 const Statistics = ({good, neutral, bad, total, average, positive}) => {
   if (total === 0) {
     return <div>No feedback given</div>
   }
   return (
-    <div>
-      <StatisticLine text={"Good"} value={good}/>
-      <StatisticLine text={"Neutral"} value={neutral}/>
-      <StatisticLine text={"Bad"} value={bad}/>
-      <StatisticLine text={"Total"} value={total}/>
-      <StatisticLine text={"Average"} value={average}/>
-      <StatisticLine text={"Positive"} value={positive}/>
-    </div>
+    <table>
+      <tbody>
+        <StatisticLine text={"Good"} value={good}/>
+        <StatisticLine text={"Neutral"} value={neutral}/>
+        <StatisticLine text={"Bad"} value={bad}/>
+        <StatisticLine text={"Total"} value={total}/>
+        <StatisticLine text={"Average"} value={average}/>
+        <StatisticLine text={"Positive"} value={positive + " %"}/>
+      </tbody>
+    </table>
   )
 }
 
@@ -38,21 +46,21 @@ const App = () => {
     setGood(updatedGood)
     setTotal(updatedGood + neutral + bad)
     setAvg((updatedGood - bad)/ (updatedGood + neutral + bad))
-    setPos((updatedGood / (updatedGood + neutral + bad)))
+    setPos((updatedGood / (updatedGood + neutral + bad) * 100))
   }
   const increaseNeutral = () => {
     const updatedNeutral = neutral + 1
     setNeutral(updatedNeutral)
     setTotal(updatedNeutral + good + bad)
     setAvg((good - bad)/ (good + updatedNeutral + bad))
-    setPos((good / (good + updatedNeutral + bad)))
+    setPos((good / (good + updatedNeutral + bad) * 100))
   }
   const increaseBad = () => {
     const updatedBad = bad + 1
     setBad(updatedBad)
     setTotal(updatedBad + good + neutral)
     setAvg((good - updatedBad)/ (good + neutral + updatedBad))
-    setPos((good / (good + neutral + updatedBad)))
+    setPos((good / (good + neutral + updatedBad) * 100))
   }
 
 
