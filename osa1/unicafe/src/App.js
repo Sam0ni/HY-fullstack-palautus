@@ -6,9 +6,18 @@ const Button = ({handleClick, text}) => (
   </button>
 )
 
-const Display = ({value, text}) => (
-  <p>{text} {value}</p>
-)
+const Statistics = ({good, neutral, bad, total, average, positive}) => {
+  return (
+    <div>
+      <p>Good {good}</p>
+      <p>Neutral {neutral}</p>
+      <p>Bad {bad}</p>
+      <p>Total {total}</p>
+      <p>Average {average}</p>
+      <p>Positive {positive}</p>
+    </div>
+  )
+}
 
 const App = () => {
   // tallenna napit omaan tilaansa
@@ -50,12 +59,8 @@ const App = () => {
       <Button handleClick={increaseNeutral} text={"Neutral"}/>
       <Button handleClick={increaseBad} text={"Bad"}/>
       <h1>Statistics</h1>
-      <Display value={good} text={"Good"}/>
-      <Display value={neutral} text={"Neutral"}/>
-      <Display value={bad} text={"Bad"}/>
-      <Display value={total} text={"All"}/>
-      <Display value={average} text={"Average"}/>
-      <Display value={positive + " %"} text={"Positive"}/>
+      <Statistics good={good} neutral={neutral} bad={bad} 
+      total={total} average={average} positive={positive}/>
     </div>
   )
 }
