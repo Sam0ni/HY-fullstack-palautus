@@ -15,9 +15,8 @@ const Content = ({ parts }) => {
 }
 
 const Total = ({exercises}) => {
-  const exer = exercises.map(part => part.exercises)
-  const total = exer.reduce((sum, current) => {
-    return sum + current
+  const total = exercises.reduce((sum, current) => {
+    return sum + current.exercises
   }, 0)
   return(
     <div>
