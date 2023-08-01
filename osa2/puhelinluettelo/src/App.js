@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react'
 import Comms from './services/Comms'
 
-const Display = ({persons}) => {
+const Display = ({persons, deletPerson}) => {
   return(
-    persons.map(person => <p key={person.name} >{person.name} {person.number}</p>)
+    persons.map(person => {
+      return(
+        <div key={person.name}>
+          {person.name} {person.number}
+          <button onClick={() => deletPerson(person.id, person.name)}>Delete</button>
+        </div>
+      )
+      })
   )
 }
 
@@ -67,6 +74,14 @@ const App = () => {
     }
   }
 
+  const deletAPerson = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      Comms
+      .delPerson(id)
+      setPersons(persons.filter(person => person.id !== id))
+    }
+  }
+
   const convertToLower = (persons) => {
     return(
       persons.map(person => person.name.toLowerCase())
@@ -109,7 +124,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}/>
       </div>
       <h2>Numbers</h2>
-      <Display persons={peopleToDispay}/>
+      <Display persons={peopleToDispay} deletPerson={deletAPerson}/>
     </div>
   )
 
