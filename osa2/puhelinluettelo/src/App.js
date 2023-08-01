@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import Comms from './services/Comms'
 
 const Display = ({persons}) => {
   return(
@@ -7,7 +7,8 @@ const Display = ({persons}) => {
   )
 }
 
-const AddPerson = ({newName, addNewName, newNumber, handleNameChange, handleNumberChange}) => {
+const AddPerson = ({newName, addNewName, newNumber,
+  handleNameChange, handleNumberChange}) => {
   return(
     <form onSubmit={addNewName}>
         <div>
@@ -46,9 +47,8 @@ const App = () => {
   const [filterStr, setFilterStr] = useState("")
 
   useEffect(() => {
-    axios
-    .get("http://localhost:3001/persons")
-    .then(response => setPersons(response.data))
+    Comms.getAll()
+    .then(response => setPersons(response))
   }, [])
 
   const addNewName = (event) => {
@@ -60,9 +60,8 @@ const App = () => {
         name: newName,
         number: newNumber
       }
-      axios
-      .post("http://localhost:3001/persons", newPerson)
-      .then(response => setPersons(persons.concat(response.data)))
+      Comms.addNew(newPerson)
+      .then(response => setPersons(persons.concat(response)))
       setNewName("")
       setNewNumber("")
     }
