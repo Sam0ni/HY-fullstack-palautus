@@ -61,7 +61,11 @@ const App = () => {
   const addNewName = (event) => {
     event.preventDefault()
     if (convertToLower(persons).includes(newName.toLowerCase())){
-      alert(`${newName} is already added to the phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook. Replace the old number?`)) {
+        updateNumber()
+        setNewName("")
+        setNewNumber("")
+      }
     } else {
       const newPerson = {
         name: newName,
@@ -86,6 +90,14 @@ const App = () => {
     return(
       persons.map(person => person.name.toLowerCase())
     )
+  }
+  const updateNumber = () => {
+    const personToUpdt = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
+    const updtdPerson = {...personToUpdt, number: newNumber}
+    Comms.update(updtdPerson.id, updtdPerson)
+    .then(response => {
+      setPersons(persons.map(person => person.id !== updtdPerson.id ? person : response))
+    })
   }
 
   const handleNameChange = (event) => {
