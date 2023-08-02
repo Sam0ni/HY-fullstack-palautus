@@ -18,10 +18,13 @@ const Notification = ({message}) => {
   if (message === null) {
     return null
   }
+  const className = message.err 
+    ? "error"
+    : "notification"
 
   return (
-    <div className='notification'>
-      {message}
+    <div className={className}>
+      {message.msg}
     </div>
   )
 }
@@ -77,7 +80,8 @@ const App = () => {
       if (window.confirm(`${newName} is already added to phonebook. Replace the old number?`)) {
         updateNumber()
         setNewName("")
-        setMessage(`The old number was succesfully replaced with ${newNumber}.`)
+        setMessage({msg: `The old number was succesfully replaced with ${newNumber}.`,
+          err: false})
         setTimeout(() => {setMessage(null)}, 5000)
         setNewNumber("")
       }
@@ -88,7 +92,8 @@ const App = () => {
       }
       Comms.addNew(newPerson)
       .then(response => setPersons(persons.concat(response)))
-      setMessage(`${newName} was added to phonebook.`)
+      setMessage({msg: `${newName} was added to phonebook.`,
+        err: false})
       setTimeout(() => {setMessage(null)}, 5000)
       setNewName("")
       setNewNumber("")
@@ -100,7 +105,8 @@ const App = () => {
       Comms
       .delPerson(id)
       setPersons(persons.filter(person => person.id !== id))
-      setMessage(`${name} was deleted from phonebook.`)
+      setMessage({msg: `${name} was deleted from phonebook.`,
+        err: false})
       setTimeout(() => {setMessage(null)}, 5000)
     }
   }
@@ -116,6 +122,12 @@ const App = () => {
     Comms.update(updtdPerson.id, updtdPerson)
     .then(response => {
       setPersons(persons.map(person => person.id !== updtdPerson.id ? person : response))
+    })
+    .catch(error => {
+      setMessage({ msg: `${personToUpdt.name} has already been deleted from phonebook.`,
+        err: true})
+      setTimeout(() => {setMessage(null)}, 5000)
+      setPersons(persons.filter(person => person.id !== personToUpdt.id))
     })
   }
 
