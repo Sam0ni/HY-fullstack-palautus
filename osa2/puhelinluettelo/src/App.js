@@ -14,6 +14,18 @@ const Display = ({persons, deletPerson}) => {
   )
 }
 
+const Notification = ({message}) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className='notification'>
+      {message}
+    </div>
+  )
+}
+
 const AddPerson = ({newName, addNewName, newNumber,
   handleNameChange, handleNumberChange}) => {
   return(
@@ -52,6 +64,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState("")
   const [filterStr, setFilterStr] = useState("")
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     Comms.getAll()
@@ -64,6 +77,8 @@ const App = () => {
       if (window.confirm(`${newName} is already added to phonebook. Replace the old number?`)) {
         updateNumber()
         setNewName("")
+        setMessage(`The old number was succesfully replaced with ${newNumber}.`)
+        setTimeout(() => {setMessage(null)}, 5000)
         setNewNumber("")
       }
     } else {
@@ -73,6 +88,8 @@ const App = () => {
       }
       Comms.addNew(newPerson)
       .then(response => setPersons(persons.concat(response)))
+      setMessage(`${newName} was added to phonebook.`)
+      setTimeout(() => {setMessage(null)}, 5000)
       setNewName("")
       setNewNumber("")
     }
@@ -83,6 +100,8 @@ const App = () => {
       Comms
       .delPerson(id)
       setPersons(persons.filter(person => person.id !== id))
+      setMessage(`${name} was deleted from phonebook.`)
+      setTimeout(() => {setMessage(null)}, 5000)
     }
   }
 
@@ -125,6 +144,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message}/>
       <FilterNames filterStr={filterStr} handleFilterChange={handleFilterChange}/>
       <h2>Add a new</h2>
       <div>
