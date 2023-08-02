@@ -5,11 +5,17 @@ const SearchField = ({ value, handler}) => {
   return<div>Find countries <input value={value} onChange={handler}/></div>
 }
 
-const DisplaySearchedCountries = ({countries, country}) => {
-  if (country.length === 0){
+const DisplaySearchedCountries = ({countries, country, showCountry}) => {
+  if (country.length === 0 && (countries.length === 0 || countries.length > 10)) {
+    const msg = countries.length === 0 ? "No matches." : "Too many matches, please specify search."
+    return <div>{msg}</div>
+  } else if (country.length === 0){
   return (
     countries.map(country => {return(
-      <div key={country}>{country}</div>
+      <div key={country}>
+        <div>{country}</div>
+        <button onClick={() => showCountry(country)}>Show</button>
+      </div>
     )
     })
   )
@@ -40,19 +46,16 @@ const App = () => {
   const handleSearchChange = (val) => {
     setSearch(val.target.value)
     const filteredCountries = allCountries.filter(country => country.toLowerCase().includes(val.target.value.toLowerCase()))
-    if (filteredCountries.length < 10 && filteredCountries.length > 1) {
+    if (filteredCountries.length <= 10 && filteredCountries.length > 1) {
       setSearchedCountries(filteredCountries)
       setSpecificCountry([])
-    } else if (filteredCountries.length >= 10){
-      setSearchedCountries(["Too many matches, please specify search."])
+    } else if (filteredCountries.length > 10 || filteredCountries.length < 1){
+      setSearchedCountries([])
       setSpecificCountry([])
     } else if (filteredCountries.length === 1){
       const oneCountry = filteredCountries.map(country => country)
       setSearchedCountries([])
       getCountryInfo(oneCountry)
-    } else {
-      setSearchedCountries(["No matches"])
-      setSpecificCountry([])
     }
   }
 
@@ -79,10 +82,14 @@ const App = () => {
     []
   )
 
+  const showCountry = (country) => {
+    getCountryInfo(country)
+  }
+
   return (
     <div>
      <SearchField value={search} handler={handleSearchChange}/> 
-     <DisplaySearchedCountries countries={searchedCountries} country={specificCountry}/>
+     <DisplaySearchedCountries countries={searchedCountries} country={specificCountry} showCountry={showCountry}/>
     </div>
   )
 }
