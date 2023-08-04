@@ -91,12 +91,18 @@ const App = () => {
         number: newNumber
       }
       Comms.addNew(newPerson)
-      .then(response => setPersons(persons.concat(response)))
-      setMessage({msg: `${newName} was added to phonebook.`,
+      .then(response => {
+        setPersons(persons.concat(response))
+        setMessage({msg: `${newName} was added to phonebook.`,
         err: false})
-      setTimeout(() => {setMessage(null)}, 5000)
-      setNewName("")
-      setNewNumber("")
+        setTimeout(() => {setMessage(null)}, 5000)
+        console.log('whattagoindeoon')
+        setNewName("")
+        setNewNumber("")
+      })
+      .catch(error => {
+        setMessage({msg: error.response.data.error, err: true})
+        setTimeout(() => {setMessage(null)}, 5000)})
     }
   }
 
