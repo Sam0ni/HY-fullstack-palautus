@@ -25,6 +25,14 @@ const initialBlogs = [
     }
   ]
 
+const nonExistingId = async () => {
+    const blog = new Blog({ title: 'willremovethissoon', url: "www.willremove.soon" })
+    await blog.save()
+    await blog.deleteOne()
+
+    return blog._id.toString()
+}
+
 beforeEach(async () => {
     await Blog.deleteMany({})
     await Blog.insertMany(initialBlogs)
@@ -98,6 +106,30 @@ test("if blog does not contain field for url, response is status 400", async () 
       .post("/api/blogs")
       .send(newBlog)
       .expect(400)
+})
+
+test("blog is removed correctly", async () => {
+    const blogID = await api.get("/api/blogs")
+    await api
+      .delete(`/api/blogs/${blogID.body[0].id}`)
+      .expect(204)
+
+    const result = await api.get("/api/blogs")
+    expect(result.body).toHaveLength(initialBlogs.length - 1)
+})
+
+test("get status 400 when trying to delete with invalid id", async () => {
+    await api
+      .delete("/api/blogs/ssdasa677856764598asd")
+      .expect(400)
+})
+
+test("get status 204 when deleting with valid nonexistent id", async () => {
+    const validID = await nonExistingId()
+    await api
+      .delete(`/api/blogs/${validID}`)
+      .expect(204)
+
 })
 
 afterAll(async () => {
