@@ -10,23 +10,25 @@ blogsRouter.get('/', async (request, response) => {
 })
   
 blogsRouter.post('/', async (request, response) => {
+  if (!request.token) {
+    return response.status(401).json({ error: "no token is provided" })
+  }
   token = jwt.verify(request.token, process.env.SECRET)
   if (!token.id) {
     return response.status(401).json({ error: "invalid token" })
   }
 
-  const user = await User.findById(token.id)
   const blog = new Blog({
     title: request.body.title,
     author: request.body.author,
     url: request.body.url,
     likes: request.body.likes || 0,
-    user: user._id
+    user: request.user._id
   })
   try {
     const result = await blog.save()
-    user.blogs = user.blogs.concat(result._id)
-    await user.save()
+    request.user.blogs = request.user.blogs.concat(result._id)
+    await request.user.save()
     response.status(201).json(result)
   } catch(exception) {
     response.status(400).json({ error: exception.message })
@@ -39,9 +41,10 @@ blogsRouter.delete("/:id", async (request, response) => {
     if (!token.id) {
       return response.status(401).json({ error: "invalid token" })
     }
-    const userId = await User.findById(token.id)
     const blog = await Blog.findById(request.params.id)
-    if (blog.user.toString() === userId._id.toString()) {
+    if (!blog) {
+      return response.status(204).end()
+    } else if (blog.user.toString() === request.user._id.toString()) {
       blog.deleteOne()
       response.status(204).end()
     } else {
