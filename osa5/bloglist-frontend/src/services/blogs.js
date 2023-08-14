@@ -15,5 +15,23 @@ const createBlog = async (token, blog) => {
     return response.data
   }
 
+const updateBlog = async (token, id, blog) => {
+  const auth = `Bearer ${token}`
+    const config = {
+      headers: { Authorization: auth}
+    }
+    const response = await axios.put(`${baseUrl}/${id}`, blog, config)
+    return response.data
+}
+
+const deleteBlog = async (token, id) => {
+  const auth = `Bearer ${token}`
+  const config = {
+    headers: { Authorization: auth}
+  }
+  const response = await axios.delete(`${baseUrl}/${id}`, config)
+  return response.data
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, createBlog }
+export default { getAll, createBlog, updateBlog, deleteBlog }
