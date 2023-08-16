@@ -21,8 +21,8 @@ const Blog = ({ blog, updateBlog, username, handleDeletion }) => {
     const showSimple = () => {
         return(
             <div>
-                <div onClick={toggleBlogInfo}>{blog.title} {blog.author}
-                    <button>Info</button>
+                <div onClick={toggleBlogInfo} className="blog">{blog.title} {blog.author}
+                    <button id="info" >Info</button>
                 </div>
             </div>
         )
@@ -31,12 +31,13 @@ const Blog = ({ blog, updateBlog, username, handleDeletion }) => {
     const showInfo = () => {
         return(
             <div>
-                <div onClick={toggleBlogInfo}>{blog.title} {blog.author}
+                <div onClick={toggleBlogInfo} className="blog">{blog.title} {blog.author}
                     <button>Hide</button>
                 </div>
                 <div>{blog.url}</div>
-                <div>{blog.likes}
-                    <button onClick={handleLike}>Like</button>
+                <div>
+                    <span id="likes">{blog.likes}</span>
+                    <button id="like" onClick={handleLike}>Like</button>
                 </div>
                 <div>{blog.user.name}</div>
             </div>
@@ -46,7 +47,7 @@ const Blog = ({ blog, updateBlog, username, handleDeletion }) => {
     const showDelete = () => {
         return(
             <div>
-                <button onClick={handleDelete}>Delete</button>
+                <button onClick={handleDelete} id="deleteButton">Delete</button>
             </div>
         )
     }

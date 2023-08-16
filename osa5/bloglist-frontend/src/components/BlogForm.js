@@ -28,6 +28,7 @@ const CreateBlog = (props) => {
                 <div>
           title:
                     <input
+                        id="title"
                         type='text'
                         value={title}
                         name='Title'
@@ -38,6 +39,7 @@ const CreateBlog = (props) => {
                 <div>
           author:
                     <input
+                        id="author"
                         type='text'
                         value={author}
                         name="Author"
@@ -48,6 +50,7 @@ const CreateBlog = (props) => {
                 <div>
           url:
                     <input
+                        id="url"
                         type='text'
                         value={url}
                         name='URL'
@@ -55,7 +58,7 @@ const CreateBlog = (props) => {
                         placeholder="Write url here"
                     />
                 </div>
-                <button type="submit">create</button>
+                <button type="submit" id="createButton">create</button>
             </form>
         </div>
     )

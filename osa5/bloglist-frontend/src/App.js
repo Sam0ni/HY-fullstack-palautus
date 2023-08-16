@@ -13,6 +13,7 @@ const Login = ({ handleLogin, handleUsernameChange, handlePasswordChange, userna
                 <div>
           username
                     <input
+                        id="username"
                         type="text"
                         onChange={handleUsernameChange}
                         value={username}
@@ -22,12 +23,13 @@ const Login = ({ handleLogin, handleUsernameChange, handlePasswordChange, userna
                 <div>
           password
                     <input
+                        id="password"
                         type="password"
                         value={password}
                         name="Password"
                         onChange={handlePasswordChange}/>
                 </div>
-                <button type='submit'>login</button>
+                <button id="loginButton" type='submit'>login</button>
             </form>
         </div>
     )
@@ -47,7 +49,7 @@ const Blogs = ({ blogs, username, handleLogout, handleUpdate, handleDeletion }) 
 
 const Notifications = ({ notification }) => {
     return(
-        <div>{notification}</div>
+        <div className="notif">{notification}</div>
     )
 }
 
