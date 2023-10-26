@@ -11,6 +11,9 @@ import {
     removeBlog,
 } from "./reducers/blogReducer"
 import { initUser, loginUser, logoutUser } from "./reducers/userReducer"
+import { initUsers } from "./reducers/usersReducer"
+import { Routes, Route, Link } from "react-router-dom"
+import UsersView from "./components/UsersView"
 
 const Login = ({
     handleLogin,
@@ -83,7 +86,7 @@ const Notifications = () => {
     return <div className="notif">{notification}</div>
 }
 
-const App = () => {
+const Home = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
@@ -91,14 +94,6 @@ const App = () => {
     const dispatch = useDispatch()
     const blogs = useSelector((state) => state.blogs)
     const user = useSelector((state) => state.user)
-
-    useEffect(() => {
-        dispatch(getAllBlogs())
-    }, [])
-
-    useEffect(() => {
-        dispatch(initUser())
-    }, [])
 
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -196,6 +191,34 @@ const App = () => {
             <Notifications />
             {!user && loginForm()}
             {user && blogsRender()}
+        </div>
+    )
+}
+
+const App = () => {
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(getAllBlogs())
+    }, [])
+
+    useEffect(() => {
+        dispatch(initUser())
+    }, [])
+
+    useEffect(() => {
+        dispatch(initUsers())
+    }, [])
+
+    return (
+        <div>
+            <div>
+                <Link to="/">home</Link>
+                <Link to="/users">users</Link>
+            </div>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/users" element={<UsersView />} />
+            </Routes>
         </div>
     )
 }
