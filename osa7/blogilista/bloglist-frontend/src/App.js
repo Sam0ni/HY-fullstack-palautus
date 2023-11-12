@@ -14,6 +14,7 @@ import { initUser, loginUser, logoutUser } from "./reducers/userReducer"
 import { initUsers } from "./reducers/usersReducer"
 import { Routes, Route, Link } from "react-router-dom"
 import UsersView from "./components/UsersView"
+import User from "./components/User"
 
 const Login = ({
     handleLogin,
@@ -218,6 +219,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/users" element={<UsersView />} />
+                <Route path="/users/:id" element={<User />} />
             </Routes>
         </div>
     )

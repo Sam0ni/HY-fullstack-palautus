@@ -102,6 +102,20 @@ const App = () => {
     },
   });
 
+  const updateBlogMutation = useMutation({
+    mutationFn: blogService.updateBlog,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+    },
+  });
+
+  const deleteBlogMutation = useMutation({
+    mutationFn: blogService.deleteBlog,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+    },
+  });
+
   const result = useQuery({
     queryKey: ["blogs"],
     queryFn: blogService.getAll,
@@ -147,27 +161,22 @@ const App = () => {
   const handleCreation = async (newBlog) => {
     try {
       newBlogMutation.mutate(newBlog);
-      console.log("AAAAAAAAAAAAAAAAAAAh");
-      notify(`${response.title} Was Added!`);
+      notify(`${newBlog.title} Was Added!`);
       blogFormRef.current.toggleVisibility();
       return true;
     } catch (exception) {
-      notify(exception.response.data.error);
+      notify(exception);
       return false;
     }
   };
 
   const handleUpdate = async (blog, id) => {
-    await blogService.updateBlog(user.token, id, blog);
-    const updatedBlogs = [...blogs];
-    const indx = updatedBlogs.findIndex((blog) => blog.id === id);
-    updatedBlogs[indx].likes += 1;
+    updateBlogMutation.mutate({ id, blog });
   };
 
   const handleDeletion = async (id, title) => {
     if (window.confirm(`Do you wish to delete ${title} ?`)) {
-      await blogService.deleteBlog(user.token, id);
-      const updatedBlogs = blogs.filter((blog) => blog.id !== id);
+      deleteBlogMutation.mutate(id);
     }
   };
 

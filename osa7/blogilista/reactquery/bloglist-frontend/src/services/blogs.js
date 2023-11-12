@@ -2,9 +2,9 @@ import axios from "axios";
 const baseUrl = "/api/blogs";
 
 const headers = {
-  Authorization: `Bearer ${JSON.parse(
-    window.localStorage.getItem("loggedUser").token
-  )}`,
+  Authorization: window.localStorage.getItem("loggedUser")
+    ? `Bearer ${JSON.parse(window.localStorage.getItem("loggedUser")).token}`
+    : null,
 };
 
 const getAll = () => {
@@ -22,18 +22,18 @@ const createBlog = async (blog) => {
 };
 
 const updateBlog = async ({ id, blog }) => {
-  const auth = `Bearer ${token}`;
+  const auth = headers;
   const config = {
-    headers: { Authorization: auth },
+    headers: auth,
   };
   const response = await axios.put(`${baseUrl}/${id}`, blog, config);
   return response.data;
 };
 
 const deleteBlog = async (id) => {
-  const auth = `Bearer ${token}`;
+  const auth = headers;
   const config = {
-    headers: { Authorization: auth },
+    headers: auth,
   };
   const response = await axios.delete(`${baseUrl}/${id}`, config);
   return response.data;
