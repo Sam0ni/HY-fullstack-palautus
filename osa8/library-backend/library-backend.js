@@ -101,11 +101,12 @@ const resolvers = {
   Author: {
     bookCount: async (root) => {
       const allBooks = await Book.find({}).populate("author");
-      return allBooks.filter((b) => (b.author.name = root.name)).length;
+      return allBooks.filter((b) => b.author.name === root.name).length;
     },
   },
   Mutation: {
     addBook: async (root, args, context) => {
+      console.log("JIHAAAAA");
       if (!context.currentUser) {
         throw new GraphQLError("not authenticated", {
           extensions: {
