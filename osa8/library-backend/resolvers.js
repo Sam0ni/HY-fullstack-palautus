@@ -30,7 +30,7 @@ const resolvers = {
       return booksList;
     },
     allAuthors: async () => {
-      return Author.find({});
+      return Author.find({}).populate("authoredBooks");
     },
     me: async (root, args, context) => {
       return context.currentUser;
@@ -39,8 +39,7 @@ const resolvers = {
 
   Author: {
     bookCount: async (root) => {
-      const allBooks = await Book.find({}).populate("author");
-      return allBooks.filter((b) => b.author.name === root.name).length;
+      return root.authoredBooks.length;
     },
   },
 
@@ -73,6 +72,9 @@ const resolvers = {
         const newBook = new Book({ ...args, author: bookAuthor });
 
         await newBook.save();
+
+        bookAuthor.authoredBooks = bookAuthor.authoredBooks.concat(newBook._id);
+        await bookAuthor.save();
 
         pubsub.publish("BOOK_ADDED", { bookAdded: newBook });
 
