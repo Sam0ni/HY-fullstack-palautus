@@ -1,4 +1,4 @@
-import { Gender, newPatient } from "../types";
+import { Entry, Gender, newPatient, Type } from "../types";
 
 const toNewPatient = (object: unknown): newPatient => {
   if (!object || typeof object !== "object") {
@@ -9,7 +9,8 @@ const toNewPatient = (object: unknown): newPatient => {
     "dateOfBirth" in object &&
     "ssn" in object &&
     "gender" in object &&
-    "occupation" in object
+    "occupation" in object &&
+    "entries" in object
   ) {
     const newPatient: newPatient = {
       name: parseName(object.name),
@@ -17,6 +18,7 @@ const toNewPatient = (object: unknown): newPatient => {
       ssn: parseSsn(object.ssn),
       gender: parseGender(object.gender),
       occupation: parseOccupation(object.occupation),
+      entries: parseEntries(object.entries),
     };
     return newPatient;
   }
@@ -59,6 +61,20 @@ const parseOccupation = (occup: unknown): string => {
   return occup;
 };
 
+const parseEntries = (entries: unknown): Entry[] => {
+  if (isArray(entries)) {
+    entries.forEach((entry) => {
+      if (!hasEntryType(entry)) {
+        console.log(entry);
+        throw new Error(`Entry is not of correct type: ${entry}`);
+      }
+    });
+  } else {
+    throw new Error("Entries are not in an array");
+  }
+  return entries;
+};
+
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
 };
@@ -71,6 +87,30 @@ const isGender = (gender: string): gender is Gender => {
   return Object.values(Gender)
     .map((v) => v.toString())
     .includes(gender);
+};
+
+const isArray = (array: unknown): array is [] => {
+  return array instanceof Array;
+};
+
+const hasEntryType = (entry: object): entry is Entry => {
+  if (!isEntry(entry)) {
+    return false;
+  }
+  return isType(entry.type);
+};
+
+const isEntry = (entry: Object): entry is Entry => {
+  if (!entry.hasOwnProperty("type")) {
+    throw new Error("Entry does not include type");
+  }
+  return entry && typeof entry === "object" && entry.hasOwnProperty("type");
+};
+
+const isType = (type: string): type is Type => {
+  return Object.values(Type)
+    .map((v) => v.toString())
+    .includes(type);
 };
 
 export default toNewPatient;

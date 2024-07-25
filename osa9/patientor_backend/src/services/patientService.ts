@@ -18,7 +18,17 @@ const addNewPatient = (newPatient: newPatient): Patient => {
   return patient;
 };
 
+const getSinglePatient = (id: string): Patient => {
+  const singlePatient = patients.find((p) => p.id === id);
+  if (singlePatient) {
+    return singlePatient;
+  } else {
+    throw new Error("No such patient!");
+  }
+};
+
 export default {
   getAllPatients,
   addNewPatient,
+  getSinglePatient,
 };
